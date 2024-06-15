@@ -66,7 +66,7 @@ class MainActivity : BaseActivity() {
         }
 
 
-        showProgressDialog(resources.getString(R.string.please_wait)    )
+        showProgressDialog(resources.getString(R.string.please_wait))
         //set navigation drawer details
         FirestoreClass().loadUserData(this)
 
