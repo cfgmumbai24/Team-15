@@ -113,13 +113,15 @@ class CreateBoardActivity : BaseActivity() {
         assignedUsersArrayList.add(getCurrentUserID())
 
         var userId:String=getCurrentUserID()
+        val qty=createBoardBinding?.etQty?.text.toString()
 
         //create the board information
         val board= Board(
             et_board_name,
             mBoardImageURL,
             createBoardBinding?.etCurrentDate?.text.toString(),
-            userId
+            userId,
+            qty.toInt()
         )
 
         FirestoreClass().createBoard(this@CreateBoardActivity,board)

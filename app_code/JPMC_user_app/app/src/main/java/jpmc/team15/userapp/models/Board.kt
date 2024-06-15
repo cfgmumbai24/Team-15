@@ -7,14 +7,16 @@ data class Board (
     val category: String = "",
     val image: String = "",
     val date: String = "",
-    val assignedTo: String = ""
+    val assignedTo: String = "",
+    val qty: Int = 0
 
 ):Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readString()!!
+        parcel.readString()!!,
+        parcel.readInt()
 
     ) {
     }
@@ -24,6 +26,7 @@ data class Board (
         parcel.writeString(image)
         parcel.writeString(date)
         parcel.writeString(assignedTo)
+        parcel.writeInt(qty)
 
 
     }
