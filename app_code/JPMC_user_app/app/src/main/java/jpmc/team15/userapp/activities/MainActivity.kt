@@ -7,11 +7,15 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.view.GravityCompat
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import jpmc.team15.userapp.R
 import jpmc.team15.userapp.databinding.ActivityMainBinding
 import jpmc.team15.userapp.databinding.AppBarMainBinding
 import jpmc.team15.userapp.databinding.MainContentBinding
+import jpmc.team15.userapp.databinding.NavHeaderMainBinding
+import jpmc.team15.userapp.firebase.FirestoreClass
+import jpmc.team15.userapp.models.User
 
 class MainActivity : BaseActivity() {
     private var mainBinding: ActivityMainBinding? = null //the parent layout
@@ -57,6 +61,42 @@ class MainActivity : BaseActivity() {
             mainBinding?.drawerLayout?.closeDrawer(GravityCompat.START)
             return@setNavigationItemSelectedListener true
         }
+
+
+        showProgressDialog(resources.getString(R.string.please_wait)    )
+        //set navigation drawer details
+        FirestoreClass().signInUser(this)
+
+    }
+
+
+    fun updateNavigationUserDetails(user: User,readBoardsList:Boolean){
+        hideProgressDialog()
+
+        val navView=mainBinding?.navView// Get a reference to the NavigationView
+        val headerView=navView?.getHeaderView(0) // Get a reference to the header view
+        val headerBinding = headerView?.let { NavHeaderMainBinding.bind(it) }// Bind the header view
+
+        //access
+        val userName=headerBinding?.tvHeaderUserName
+        val profile=headerBinding?.ivHeaderProfile
+
+        //set the image
+        Glide.with(this)
+            .load(user.image)
+            .fitCenter()
+            .placeholder(R.drawable.ic_user_place_holder)
+            .into(profile!!)
+
+        userName?.text=user.name
+
+        //mUserName=user.name
+
+//        //read boards if required
+//        if(readBoardsList){
+//            showProgressDialog(resources.getString(R.string.please_wait))
+//            FirestoreClass().getBoardsList(this)
+//        }
 
     }
 

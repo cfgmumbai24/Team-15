@@ -9,6 +9,8 @@ import android.view.WindowManager
 import com.google.firebase.auth.FirebaseAuth
 import jpmc.team15.userapp.R
 import jpmc.team15.userapp.databinding.ActivitySignInBinding
+import jpmc.team15.userapp.firebase.FirestoreClass
+import jpmc.team15.userapp.models.User
 
 
 class SignInActivity : BaseActivity() {
@@ -46,6 +48,7 @@ class SignInActivity : BaseActivity() {
 
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
+
                     hideProgressDialog()
 
                     if (task.isSuccessful) {
@@ -53,8 +56,8 @@ class SignInActivity : BaseActivity() {
                         Log.d("SIGN IN", "signInWithEmail:success")
                         val user = auth.currentUser
 
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
+                        showProgressDialog(resources.getString(R.string.please_wait))
+                        FirestoreClass().signInUser(this)
 
                     } else {
                         // If sign in fails, display a message to the user.
@@ -95,11 +98,11 @@ class SignInActivity : BaseActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
     }
-}
 
     //sign in after getting data from firestore
-//    fun signInSuccess(user: User){
-//        hideProgressDialog()
-//        startActivity(Intent(this, MainActivity::class.java))
-//        finish()
-//    }
+    fun signInSuccess(user: User) {
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+}
