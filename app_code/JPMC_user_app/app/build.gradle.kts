@@ -69,4 +69,6 @@ dependencies {
     //dexter
     implementation("com.karumi:dexter:6.0.1")
 
+    implementation ("com.airbnb.android:lottie:4.2.0")
+
 }
