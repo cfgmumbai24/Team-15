@@ -22,6 +22,7 @@ class MainActivity : BaseActivity() {
     private var appBarBinding: AppBarMainBinding? = null //the top toolbar
     private var mainContentBinding: MainContentBinding? = null //the recycler view containing
 
+    private lateinit var mUserName:String//to know who created the board
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +70,12 @@ class MainActivity : BaseActivity() {
         //set navigation drawer details
         FirestoreClass().loadUserData(this)
 
+
+        appBarBinding?.fabCreateBoard?.setOnClickListener {
+            val intent= Intent(this@MainActivity,CreateBoardActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
 
@@ -92,7 +99,7 @@ class MainActivity : BaseActivity() {
 
         userName?.text=user.name
 
-        //mUserName=user.name
+        mUserName=user.name
 
 //        //read boards if required
 //        if(readBoardsList){
