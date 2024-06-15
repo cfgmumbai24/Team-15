@@ -52,6 +52,25 @@ public class ProductsWeb {
         return productsService.sendQuery(body);
     }
 
-    
+    @PostMapping("/sendRequest")
+    public ResponseEntity<Map<String,Object>> sendRequest(@RequestBody Map<String,Object> body){
+        return productsService.sendRequest(body);
+    }
+
+    @GetMapping("/showProducts")
+    public List<Map<String,Object>> showProducts(){
+        return productsService.showProducts();
+    }
+
+    @GetMapping("/getRequest")
+    public List<Map<String,Object>> getRequest(){
+        return productsService.getRequest();
+    }
+
+
+
+
+
+
 
 }

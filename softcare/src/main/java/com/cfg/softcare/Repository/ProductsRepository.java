@@ -66,4 +66,12 @@ public class ProductsRepository {
     public List<Map<String, Object>> fetchAdmin() {
         return jdbcTemplate.queryForList("EXEC dbo.showAdmin");
     }
+
+    public List<Map<String,Object>> showProducts(){
+        return jdbcTemplate.queryForList("EXEC dbo.sp_ShowProducts");
+    }
+
+    public List<Map<String, Object>> getRequest() {
+        return jdbcTemplate.queryForList("EXEC dbo.sp_get_query");
+    }
 }

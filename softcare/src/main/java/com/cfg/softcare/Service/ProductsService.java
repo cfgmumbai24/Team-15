@@ -133,4 +133,17 @@ public class ProductsService {
 
         javaMailSender.send(mimeMessage);
     }
+
+//    public ResponseEntity<Map<String, Object>> sendRequest(Map<String, Object> body) {
+//
+//    }
+
+    public List<Map<String,Object>> showProducts(){
+        return productRepository.showProducts();
+    }
+
+    public List<Map<String, Object>> getRequest() {
+        return productRepository.getRequest();
+    }
+
 }
