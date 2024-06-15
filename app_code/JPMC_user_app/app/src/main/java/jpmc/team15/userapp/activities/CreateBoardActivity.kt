@@ -7,6 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.toColorInt
@@ -24,6 +28,8 @@ import jpmc.team15.userapp.firebase.FirestoreClass
 import jpmc.team15.userapp.models.Board
 import jpmc.team15.userapp.utils.Constants
 import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class CreateBoardActivity : BaseActivity() {
     private var createBoardBinding: ActivityCreateBoardBinding? = null
@@ -35,6 +41,8 @@ class CreateBoardActivity : BaseActivity() {
 
     private var mBoardImageURL:String=""//to store the image url in remote
 
+
+    private var et_board_name:String ="Category"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +77,32 @@ class CreateBoardActivity : BaseActivity() {
             //so we can create without any image as well in this code
         }
 
+        //auto populate the date
+        createBoardBinding?.etCurrentDate?.setText(getCurrentDate())
+
+
+        //drop down
+        val spinner:Spinner=createBoardBinding?.spinnerCategory!!
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.categories,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
+        }
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val selectedCategory = parent.getItemAtPosition(position).toString()
+                // Assuming you have an EditText named et_board_name
+                et_board_name=selectedCategory.toString()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Another interface callback
+            }
+        }
 
     }
 
@@ -78,18 +112,26 @@ class CreateBoardActivity : BaseActivity() {
         val assignedUsersArrayList:ArrayList<String> = ArrayList()
         assignedUsersArrayList.add(getCurrentUserID())
 
-
+        var userId:String=getCurrentUserID()
 
         //create the board information
         val board= Board(
-            createBoardBinding?.etBoardName?.text.toString(),
+            et_board_name,
             mBoardImageURL,
-            mUserName
+            createBoardBinding?.etCurrentDate?.text.toString(),
+            userId
         )
 
         FirestoreClass().createBoard(this@CreateBoardActivity,board)
 
     }
+    fun getCurrentDate(): String {
+        val currentDate = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        return currentDate.format(formatter)
+    }
+
+
     //to know successful creation
     fun boardCreatedSuccessfully(){
         hideProgressDialog()

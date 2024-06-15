@@ -32,7 +32,8 @@
     <string name="create_board_title">Create Board</string>
     <string name="create_board_description">Create a new board to start working on your project.</string>
     <string name="create">CREATE</string>
-    <string name="board_name">Board Name</string>
+    <string name="board_name">Product Category</string>
+    <string name="date">Enter Today\'s Date</string>
 
     <string name="no_boards_are_available">No Boards are available!!!</string>
 
@@ -64,4 +65,14 @@
 
 
     <string name="default_notification_channel_id">project_manager</string>
+
+
+    <string-array name="categories">
+        <item>Teracotta</item>
+        <item>Moonj</item>
+        <item>Jute</item>
+        <item>Banana Fibre</item>
+        <item>Macrame</item>
+        <!-- Add more categories as needed -->
+    </string-array>
 </resources>

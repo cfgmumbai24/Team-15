@@ -44,12 +44,11 @@
                 android:orientation="vertical"
                 android:padding="@dimen/my_profile_screen_content_padding">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/iv_profile_user_image"
-                    android:layout_width="@dimen/my_profile_user_image_size"
-                    android:layout_height="@dimen/my_profile_user_image_size"
-                    android:contentDescription="@string/image_contentDescription"
-                    android:src="@drawable/ic_nav_profile" />
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:src="@drawable/jpmmss_logo"/>
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -61,7 +60,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/name"
-                        android:textSize="@dimen/et_text_size" />
+                        android:textSize="@dimen/et_text_size"
+
+                        android:focusable="false"
+
+                        android:focusableInTouchMode="false"
+
+                        />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -91,29 +96,39 @@
                     android:layout_marginTop="@dimen/my_profile_et_mobile_marginTop">
 
                     <androidx.appcompat.widget.AppCompatEditText
-                        android:id="@+id/et_mobile"
+                        android:id="@+id/et_mobile_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/mobile"
+                        android:hint="Sub Cluster Phone"
                         android:inputType="phone"
-                        android:textSize="@dimen/et_text_size" />
+                        android:textSize="@dimen/et_text_size"
+                        android:focusable="false"
+
+                        android:focusableInTouchMode="false"
+
+                        />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
-                    android:id="@+id/btn_update"
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/my_profile_btn_update_marginTop"
-                    android:background="@drawable/shape_button_rounded"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:paddingTop="@dimen/btn_paddingTopBottom"
-                    android:paddingBottom="@dimen/btn_paddingTopBottom"
-                    android:text="@string/update"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/btn_text_size" />
+                    android:layout_marginTop="@dimen/my_profile_et_mobile_marginTop">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/et_mobile_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Master Admin Phone"
+                        android:inputType="phone"
+                        android:textSize="@dimen/et_text_size"
+                        android:focusable="false"
+
+                        android:focusableInTouchMode="false"
+
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

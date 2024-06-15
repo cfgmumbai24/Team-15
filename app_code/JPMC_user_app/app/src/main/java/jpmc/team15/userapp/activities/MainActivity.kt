@@ -7,14 +7,17 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import jpmc.team15.userapp.R
+import jpmc.team15.userapp.adapters.ItemBoardAdapter
 import jpmc.team15.userapp.databinding.ActivityMainBinding
 import jpmc.team15.userapp.databinding.AppBarMainBinding
 import jpmc.team15.userapp.databinding.MainContentBinding
 import jpmc.team15.userapp.databinding.NavHeaderMainBinding
 import jpmc.team15.userapp.firebase.FirestoreClass
+import jpmc.team15.userapp.models.Board
 import jpmc.team15.userapp.models.User
 
 class MainActivity : BaseActivity() {
@@ -68,7 +71,7 @@ class MainActivity : BaseActivity() {
 
         showProgressDialog(resources.getString(R.string.please_wait))
         //set navigation drawer details
-        FirestoreClass().loadUserData(this)
+        FirestoreClass().loadUserData(this,true)
 
 
         appBarBinding?.fabCreateBoard?.setOnClickListener {
@@ -92,7 +95,7 @@ class MainActivity : BaseActivity() {
 
         //set the image
         Glide.with(this)
-            .load(user.image)
+            .load(R.drawable.jpmmss_logo)
             .fitCenter()
             .placeholder(R.drawable.ic_user_place_holder)
             .into(profile!!)
@@ -101,12 +104,38 @@ class MainActivity : BaseActivity() {
 
         mUserName=user.name
 
-//        //read boards if required
-//        if(readBoardsList){
-//            showProgressDialog(resources.getString(R.string.please_wait))
-//            FirestoreClass().getBoardsList(this)
-//        }
+        //read boards if required
+        if(readBoardsList){
+            showProgressDialog("Loading your uploads")
+            FirestoreClass().getBoardsList(this)
+        }
 
+    }
+
+
+    //recycler view list inside main screen
+    fun populateBoardsListToUI(boardList:ArrayList<Board>){
+        hideProgressDialog()
+
+        if(boardList.size>0){
+            //play with visibility
+            mainContentBinding?.rvBoardsList?.visibility=android.view.View.VISIBLE
+            mainContentBinding?.tvNoBoardsAvailable?.visibility=android.view.View.GONE
+
+            //assign the adapter
+            val adapter=ItemBoardAdapter(this@MainActivity,boardList)
+
+            mainContentBinding?.rvBoardsList?.setHasFixedSize(true)
+            mainContentBinding?.rvBoardsList?.layoutManager= LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+            mainContentBinding?.rvBoardsList?.adapter= adapter
+
+
+
+        }else{
+            //visibility
+            mainContentBinding?.rvBoardsList?.visibility=android.view.View.GONE
+            mainContentBinding?.tvNoBoardsAvailable?.visibility=android.view.View.VISIBLE
+        }
     }
 
     private fun setUpActionBar(){

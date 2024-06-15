@@ -33,45 +33,9 @@ class FirestoreClass {
     }
 
 
-    fun updateUserProfileData(activity: Activity,
-                              userHashMap: HashMap<String, Any>) {
-        //in fire store
-        //there is a table -> collection
-        //each user has a document -> row
-        //inside each user: there is hashmap: name, email, mobile, image
-        //there is key-value pair
-        //so we are also passing a hash map to update
-
-        mFireStore.collection(Constants.USERS)
-            .document(getCurrentUserID())
-            .update(userHashMap)
-            .addOnSuccessListener {
-                Log.e("Firebase","Profile data updated successfully")
-                //Toast.makeText(activity,"Profile updated successfully",Toast.LENGTH_SHORT).show()
-                when(activity){
-                    is MyProfileActivity ->{
-                        activity.profileUpdateSuccess()
-                    }
-
-                }
-
-            }
-            .addOnFailureListener { e ->
-                when(activity){
-                    is MyProfileActivity ->{
-                        activity.hideProgressDialog()
-                    }
-
-                }
-                Log.e("Firebase", "Error while updating the user details.", e)
-                Toast.makeText(activity,"Error in updating profile",Toast.LENGTH_SHORT).show()
-            }
-
-    }
 
 
-
-    fun loadUserData(activity: Activity){//kyuki calling activity ke instance pr  hi wapas jana hain
+    fun loadUserData(activity: Activity,toRefresh:Boolean=true){//kyuki calling activity ke instance pr  hi wapas jana hain
         mFireStore.collection(Constants.USERS)//is collection -> table
             .document(getCurrentUserID())//ka ye row -> cause the rows are identified by the user id
             .get()
@@ -82,7 +46,7 @@ class FirestoreClass {
                         activity.signInSuccess(loggedInUser)
                     }
                     is MainActivity ->{
-                        activity.updateNavigationUserDetails(loggedInUser,false)
+                        activity.updateNavigationUserDetails(loggedInUser,toRefresh)
                     }
                     is MyProfileActivity ->{
                         activity.setUserDataInUI(loggedInUser)
@@ -133,5 +97,27 @@ class FirestoreClass {
 
     }
 
+
+    //get list of all boards
+    fun getBoardsList(activity:MainActivity){
+        mFireStore.collection(Constants.BOARDS)
+            .whereEqualTo(Constants.ASSIGNED_TO, "oW2KIyKGKcMvPiG0oGiHzJ6oSbm2") // check if the user is assigned to the board
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e("FireStore: ", "DocumentList" + document.documents.toString())
+                val boardList: ArrayList<Board> = ArrayList()
+
+                // get all boards in my list
+                for (i in document.documents) {
+                    val board = i.toObject(Board::class.java)!!
+                    boardList.add(board)
+                }
+                activity.populateBoardsListToUI(boardList)
+            }
+            .addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e("FireStoreError", "Error while getting the board list", e)
+            }
+    }
 
 }
