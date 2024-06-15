@@ -1,13 +1,14 @@
 import React from "react";
 import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
-import Home from "./Home";
-import About from "./About";
+import LandingPage from "./pages/LandingPage";
+import Admin from "./pages/Admin";
+
 const App=()=>{
   return (
   <Router>
     <Routes>
-      <Route path="/" element={<Home/>}/>
-      <Route path="/About" element={<About/>}/>
+      <Route path="/admin/*" element={<Admin/>}/>
+      <Route path="/" element={<LandingPage/>}/>
     </Routes>
   </Router>
   );
