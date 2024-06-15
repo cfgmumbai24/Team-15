@@ -24,10 +24,14 @@ import jpmc.team15.userapp.R
 import jpmc.team15.userapp.databinding.ActivityMyProfileBinding
 import jpmc.team15.userapp.firebase.FirestoreClass
 import jpmc.team15.userapp.models.User
+import jpmc.team15.userapp.utils.Constants
 import java.io.IOException
 
 class MyProfileActivity : BaseActivity() {
     private var profileBinding: ActivityMyProfileBinding? = null //the parent layout
+
+
+
 
     //for permission code
     companion object{
@@ -40,6 +44,11 @@ class MyProfileActivity : BaseActivity() {
 
     //for downloading
     private var mProfileImageURL: String = ""
+
+    //for updating profile
+    private lateinit var mUserDetails: User
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -78,11 +87,21 @@ class MyProfileActivity : BaseActivity() {
                 }).onSameThread().check()
         }
 
+
+
         //update button
         profileBinding?.btnUpdate?.setOnClickListener {
-            if(mSelectedImageFileUri!=null){
+            if(mSelectedImageFileUri!=null) {
                 uploadUserImage()
             }
+
+            else{
+                showProgressDialog(resources.getString(R.string.please_wait_update))
+                updateUserProfileData()
+            }
+
+
+
         }
     }
 
@@ -118,6 +137,55 @@ class MyProfileActivity : BaseActivity() {
         }
         hideProgressDialog()
     }
+
+    //to update profile after button pressed successfully
+    private fun updateUserProfileData(){
+
+
+        val userHashMap=HashMap<String, Any>()
+
+        var anyChangesMade=false
+
+        //add values to hashmap
+
+        //update image if it is not the same
+        //mUserDetails is the current user details fetched from remote
+        //mProfileImage will be empty if we have not selected a new image
+        if(!mProfileImageURL.isNullOrEmpty() && mProfileImageURL!=mUserDetails.image){
+            userHashMap[Constants.IMAGE]=mProfileImageURL
+            anyChangesMade=true
+        }
+        if(profileBinding?.etName?.text.toString()!=mUserDetails.name){
+            userHashMap[Constants.NAME]=profileBinding?.etName?.text.toString()
+            anyChangesMade=true
+        }
+        if(profileBinding?.etMobile?.text.toString()!=mUserDetails.mobile.toString()){
+            userHashMap[Constants.MOBILE]=profileBinding?.etMobile?.text.toString().toLong()
+            anyChangesMade=true
+        }
+
+        FirestoreClass().updateUserProfileData(this,userHashMap)
+
+//        if(anyChangesMade){
+//            showProgressDialog(resources.getString(R.string.please_wait_update))
+//            FirestoreClass().updateUserProfileData(this,userHashMap)
+//        }else{
+//            showErrorSnackBar("No changes made")
+//        }
+
+    }
+
+    fun profileUpdateSuccess(){
+        hideProgressDialog()
+        Toast.makeText(this@MyProfileActivity,"Profile updated successfully",Toast.LENGTH_SHORT).show()
+
+        val intent=Intent(this@MyProfileActivity,MainActivity::class.java)
+        setResult(Activity.RESULT_OK)//for updating the side nav
+
+        startActivity(intent)
+        finish()
+    }
+
 
 
     //check the file type from the URI  to check if we can use as image

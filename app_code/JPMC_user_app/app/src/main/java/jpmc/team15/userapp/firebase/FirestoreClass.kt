@@ -31,6 +31,43 @@ class FirestoreClass {
     }
 
 
+    fun updateUserProfileData(activity: Activity,
+                              userHashMap: HashMap<String, Any>) {
+        //in fire store
+        //there is a table -> collection
+        //each user has a document -> row
+        //inside each user: there is hashmap: name, email, mobile, image
+        //there is key-value pair
+        //so we are also passing a hash map to update
+
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserID())
+            .update(userHashMap)
+            .addOnSuccessListener {
+                Log.e("Firebase","Profile data updated successfully")
+                //Toast.makeText(activity,"Profile updated successfully",Toast.LENGTH_SHORT).show()
+                when(activity){
+                    is MyProfileActivity ->{
+                        activity.profileUpdateSuccess()
+                    }
+
+                }
+
+            }
+            .addOnFailureListener { e ->
+                when(activity){
+                    is MyProfileActivity ->{
+                        activity.hideProgressDialog()
+                    }
+
+                }
+                Log.e("Firebase", "Error while updating the user details.", e)
+                Toast.makeText(activity,"Error in updating profile",Toast.LENGTH_SHORT).show()
+            }
+
+    }
+
+
 
     fun loadUserData(activity: Activity){//kyuki calling activity ke instance pr  hi wapas jana hain
         mFireStore.collection(Constants.USERS)//is collection -> table
