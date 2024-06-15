@@ -8,7 +8,8 @@ data class Board (
     val image: String = "",
     val date: String = "",
     val assignedTo: String = "",
-    val qty: Int = 0
+    val qty: Int = 0,
+    val inferredClass:String = "Not identified"
 
 ):Parcelable {
     constructor(parcel: Parcel) : this(
@@ -16,7 +17,9 @@ data class Board (
         parcel.readString()!!,
         parcel.readString()!!,
         parcel.readString()!!,
-        parcel.readInt()
+        parcel.readInt(),
+        parcel.readString()!!
+
 
     ) {
     }
@@ -27,6 +30,7 @@ data class Board (
         parcel.writeString(date)
         parcel.writeString(assignedTo)
         parcel.writeInt(qty)
+        parcel.writeString(inferredClass)
 
 
     }

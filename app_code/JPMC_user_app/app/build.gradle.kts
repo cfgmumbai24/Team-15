@@ -71,4 +71,7 @@ dependencies {
 
     implementation ("com.airbnb.android:lottie:4.2.0")
 
+
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+
 }

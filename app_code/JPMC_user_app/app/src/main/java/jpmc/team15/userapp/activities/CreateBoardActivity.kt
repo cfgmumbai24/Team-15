@@ -1,10 +1,15 @@
 package jpmc.team15.userapp.activities
 
+import android.util.Base64
+import org.json.JSONObject
+
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -15,6 +20,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.graphics.toColorInt
 import com.bumptech.glide.Glide
+import com.google.common.net.MediaType
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.karumi.dexter.Dexter
@@ -27,6 +33,12 @@ import jpmc.team15.userapp.databinding.ActivityCreateBoardBinding
 import jpmc.team15.userapp.firebase.FirestoreClass
 import jpmc.team15.userapp.models.Board
 import jpmc.team15.userapp.utils.Constants
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -43,6 +55,8 @@ class CreateBoardActivity : BaseActivity() {
 
 
     private var et_board_name:String ="Category"
+
+    private var inferred_class:String="Not identified"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +135,8 @@ class CreateBoardActivity : BaseActivity() {
             mBoardImageURL,
             createBoardBinding?.etCurrentDate?.text.toString(),
             userId,
-            qty.toInt()
+            qty.toInt(),
+            inferred_class
         )
 
         FirestoreClass().createBoard(this@CreateBoardActivity,board)
@@ -139,45 +154,78 @@ class CreateBoardActivity : BaseActivity() {
         hideProgressDialog()
         setResult(Activity.RESULT_OK)
         val intent= Intent(this@CreateBoardActivity,MainActivity::class.java)
-        startActivity(intent)
-        finish()
+
+
+
+        //startActivity(intent)
+        //finish()
     }
 
+
+
+
     //picture upload in storage
-    private fun uploadBoardImage(){
+    private fun uploadBoardImage() {
         showProgressDialog(resources.getString(R.string.please_wait))
 
-        //image exists then only upload
-        if(mSelectedImageFileUri!=null){
-            showProgressDialog(resources.getString(R.string.please_wait))
-
+        if (mSelectedImageFileUri != null) {
             val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
-                "BOARD_IMAGE"+System.currentTimeMillis()+"."+
-                        Constants.getFileExtension(this,mSelectedImageFileUri!!) //name of the file we want => generate unique name
+                "BOARD_IMAGE" + System.currentTimeMillis() + "." +
+                        Constants.getFileExtension(this, mSelectedImageFileUri!!)
             )
 
-            sRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener { taskSnapshot ->//write the file in storage
-
-                //store the link to the image int somewhere -> storage
-                taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener {uri->
-                    Log.e("Board_Image_URL",uri.toString())
-
-                    //we are storing the link to the image in storage in a global variable
-                    //we will use this to check whether the image is updated or is it the same as before
-
-                    mBoardImageURL=uri.toString() //get the link to the image in storage
-                    createBoard() //create board in remote
-
-
-
+            sRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener { taskSnapshot ->
+                taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener { uri ->
+                    mBoardImageURL = uri.toString()
+                    callAPI(mBoardImageURL)
+                    createBoard()
+                }.addOnFailureListener {
+                    hideProgressDialog()
+                    showErrorSnackBar("Error in uploading image")
                 }
-            }.addOnFailureListener{
-                hideProgressDialog()
-                showErrorSnackBar("Error in uploading image")
-
             }
         }
+    }
 
+    private fun callAPI(imageUrl: String) {
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("https://detect.roboflow.com/jpmmss/1?api_key=IZtyygJiC3DOgQoj4iCN&image=$imageUrl")
+            .build()
+
+        println("Request: $request")
+        Log.e("Request:", request.toString())
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    hideProgressDialog()
+                    showErrorSnackBar("Error in calling the API: ${e.message}")
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val jsonResponse = JSONObject(response.body?.string())
+                    val predictions = jsonResponse.getJSONObject("predictions")
+                    val keys = predictions.keys()
+                    var lastKey = ""
+                    while (keys.hasNext()) {
+                        lastKey = keys.next()
+                    }
+                    inferred_class = lastKey
+                } else {
+                    inferred_class = "Not identified"
+                }
+
+                Log.e("API:", inferred_class)
+
+                // Delay the execution of createBoard() by 5 seconds
+                Handler(Looper.getMainLooper()).postDelayed({
+                    createBoard()
+                }, 6000)
+            }
+        })
     }
 
     //permission handling
