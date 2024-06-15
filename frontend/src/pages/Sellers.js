@@ -14,23 +14,22 @@ import { Alert, Box, TextField } from '@mui/material';
 const rows = [
   {
     name: "John Doe",
-    email: "john@doe",
     phone: "1234567890",
   }
 ];
 
-export default function Users() {
+export default function Sellers() {
+  const userAccessRole = localStorage.getItem('role') || 0;
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [userData, setUserData] = React.useState({
-    name: "Harish",
-    email: "harish@gmail.com",
-    phone: "9999999999",
-  });
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
+  const [sellerData, setSellerData] = React.useState({
+    name: "",
+    phone: "",
+  });
 
-  const handleDeleteUser = async () => {
+  const handleDeleteSeller = async () => {
     // Add delete user logic here
     setDeleteOpen(false)
     setIsDelete(true)
@@ -39,7 +38,7 @@ export default function Users() {
     }, 3000);
   }
 
-  const handleEditUser = async () => {
+  const handleEditSeller = async () => {
     // Add edit user logic here
     setEditOpen(false)
     setIsEdit(true)
@@ -55,10 +54,13 @@ export default function Users() {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell align="right">Email</TableCell>
             <TableCell align="right">Phone No</TableCell>
-            <TableCell align="right">Edit</TableCell>
-            <TableCell align="right">Delete</TableCell>
+            {
+                userAccessRole === 0 && <>
+              <TableCell align="right">Edit</TableCell>
+              <TableCell align="right">Delete</TableCell>
+                </>
+            }
           </TableRow>
         </TableHead>
         <TableBody>
@@ -70,16 +72,20 @@ export default function Users() {
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row.email}</TableCell>
               <TableCell align="right">{row.phone}</TableCell>
-              <TableCell align="right" style={{cursor: 'pointer'}} onClick={() => { setUserData(row); setEditOpen(true)}}><EditIcon/></TableCell>
-              <TableCell align="right" style={{cursor: 'pointer'}} onClick={() => { setUserData(row); setDeleteOpen(true)}}><DeleteIcon/></TableCell>
+              {
+                userAccessRole === 0 && 
+                <>
+                   <TableCell align="right" style={{cursor: 'pointer'}} onClick={setEditOpen}><EditIcon/></TableCell>
+                   <TableCell align="right" style={{cursor: 'pointer'}} onClick={setDeleteOpen}><DeleteIcon/></TableCell>
+                </>
+              }
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-    <AlertDialog open={editOpen} setOpen={setEditOpen} title="Edit Sub-Admin" content="Edit sub-admin" handleSave={handleEditUser}>
+    <AlertDialog open={editOpen} setOpen={setEditOpen} title="Edit User" content="Edit user details" handleSave={handleEditSeller}>
     <Box
       component="form"
       sx={{
@@ -90,31 +96,38 @@ export default function Users() {
       noValidate
       autoComplete="off"
     >
-        <TextField id="outlined-basic" label="Name" variant="outlined" size='small' value={userData.name} onChange={(e) => setUserData({
-          ...userData,
+        <TextField id="outlined-basic" label="Name" variant="outlined" size='small' value={sellerData.email} onChange={(e) => setSellerData({
+          ...sellerData,
           name: e.target.value
         })}/>
-        <TextField id="outlined-basic" label="Email" variant="outlined" size='small' value={userData.email} onChange={(e) => setUserData({
-          ...userData,
+        <TextField id="outlined-basic" label="Email" variant="outlined" size='small'
+        value={sellerData.email} onChange={(e) => setSellerData({
+          ...sellerData,
           email: e.target.value
-        
-        })}/>
-        <TextField id="outlined-basic" label="Phone No" variant="outlined" size='small' value={userData.phone}
-        onChange={(e) => setUserData({
-          ...userData,
+        })}
+        />
+        <TextField id="outlined-basic" label="Phone No" variant="outlined" size='small' 
+        value={sellerData.phone} onChange={(e) => setSellerData({
+          ...sellerData,
           phone: e.target.value
+        })}
+        />
+        <TextField id="outlined-basic" label="Role" variant="outlined" size='small'
+        value={sellerData.role} onChange={(e) => setSellerData({
+          ...sellerData,
+          role: e.target.value
         })}
         />
       </Box>
     </AlertDialog>
-    <AlertDialog open={deleteOpen} setOpen={setDeleteOpen} title="Delete Sub-Admin" contentText="Do you want to delete this sub-admin?" handleSave={handleDeleteUser}/>
+    <AlertDialog open={deleteOpen} setOpen={setDeleteOpen} title="Delete Seller" contentText="Do you want to delete this seller?" handleSave={handleDeleteSeller}/>
     <div style={{position: 'absolute', bottom: 0, right: 0}}>
-    {
-      isDelete && <Alert severity="error" onClose={() => setIsDelete(false)}>Sub-Admin deleted successfully</Alert>
-    }
-    {
-      isEdit && <Alert severity="success" onClose={() => setIsEdit(false)}>Sub-Admin updated successfully</Alert>
-    }
+      {
+        isDelete && <Alert severity="error" onClose={() => setIsDelete(false)}>Seller deleted successfully</Alert>
+      }
+      {
+        isEdit && <Alert severity="success" onClose={() => setIsEdit(false)}>Seller updated successfully</Alert>
+      }
     </div>
     </>
   );

@@ -13,35 +13,109 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
 import HelpIcon from '@mui/icons-material/Help';
-import { Routes, Route, Link } from 'react-router-dom';
-// Assuming you have components for Users, Products, Requests
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import CategoryIcon from '@mui/icons-material/Category';
+import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import Users from './Users';
-import Products from './Products';
 import Requests from './Requests';
+import Buyers from './Buyers';
+import Sellers from './Sellers';
+import Photos from './Photos';
+import Catalogs from './Catalogs';
+import Categories from './Categories';
+import { Button } from '@mui/material';
 
 const routes = [
   {
-    name: 'Users',
-    path: 'users',
+    name: 'Sub-Admin',
+    path: 'subadmin',
     accessCodes: [0],
   },
   {
-    name: 'Products',
-    path: 'products',
+    name: 'Sellers',
+    path: 'sellers',
     accessCodes: [0, 1],
+  },
+  {
+    name: 'Catalogs',
+    path: 'catalog',
+    accessCodes: [0, 1],
+  },
+  {
+    name: 'Categories',
+    path: 'categories',
+    accessCodes: [0],
   },
   {
     name: 'Requests',
     path: 'requests',
     accessCodes: [0],
   },
+  {
+    name: 'Buyers',
+    path: 'buyers',
+    accessCodes: [0]
+  },
+  {
+    name: 'Photos',
+    path: 'photos',
+    accessCodes: [0, 1],
+  }
 ];
 
 const drawerWidth = 240;
 
+
 export default function Admin() {
-  const userAccessRoute = 0;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pathname = location.pathname?.split('/')[1]
+
+  React.useEffect(() => {
+    // CHANGE IT AT LAST
+    if (localStorage.getItem("role") === null) {
+      navigate("/login")
+    }
+  }, [navigate])
+
+  const userAccessRole = localStorage.getItem('role') || 0;
+
+  const handleNavigation = (path) => {
+   navigate(path)
+  };
+
+  const handleLogout = async () => {
+    await localStorage.removeItem('role');
+    navigate('/login')
+  }
+
+  const renderRoutes = () => {
+    return routes.map(({ name, path, accessCodes }) => {
+      if (!accessCodes.includes(Number(userAccessRole))) return null;
+      return (
+        <ListItem key={name} disablePadding >
+          <ListItemButton onClick={() => handleNavigation(path)} selected={pathname === path}>
+            <ListItemIcon >
+              {
+                path === "subadmin" ? <AccountCircleIcon />
+                  : path === "catalog" ? <ProductionQuantityLimitsIcon />
+                    : path === "requests" ? <HelpIcon />
+                      : path === "buyers" ? <LocalMallIcon />
+                        : path === "sellers" ? <StorefrontIcon /> :
+                          path === "photos" ? <CameraAltIcon /> :
+                            path === "categories" ? <CategoryIcon /> :
+                              <></>
+              }
+            </ListItemIcon>
+            <ListItemText primary={name} />
+          </ListItemButton>
+        </ListItem>
+      );
+    });
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -50,10 +124,13 @@ export default function Admin() {
         position="fixed"
         sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
       >
-        <Toolbar>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" noWrap component="div">
             Dashboard
           </Typography>
+          <Button color="inherit" onClick={handleLogout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -71,23 +148,7 @@ export default function Admin() {
         <Toolbar />
         <Divider />
         <List>
-          {routes.map(({ name, path, accessCodes }, index) => {
-            if (!accessCodes.includes(userAccessRoute)) return null;
-            return (
-              <ListItem key={name} disablePadding>
-                <ListItemButton component={Link} to={path}>
-                  <ListItemIcon>
-                    {
-                      path === "users" ? <AccountCircleIcon/>
-                      : path === "products" ? <ProductionQuantityLimitsIcon/>
-                      : path === "requests" ? <HelpIcon/>: <></>
-                    }
-                  </ListItemIcon>
-                  <ListItemText primary={name} />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
+          {renderRoutes()}
         </List>
       </Drawer>
       <Box
@@ -99,9 +160,14 @@ export default function Admin() {
         <Route path="/" element={<Users />} />
           {routes.map(({ path }) => (
             <Route key={path} path={path} element={
-              path === 'users' ? <Users /> :
-              path === 'products' ? <Products /> :
-              path === 'requests' ? <Requests /> : null
+              path === 'subadmin' ? <Users /> :
+              path === 'catalog' ? <Catalogs /> :
+              path === 'requests' ? <Requests /> : 
+              path === 'buyers' ? <Buyers/> :
+              path === 'sellers' ? <Sellers/> :
+              path === 'photos'? <Photos/> : 
+              path === 'categories' ? <Categories/> :
+              null
             } />
           ))}
         </Routes>
