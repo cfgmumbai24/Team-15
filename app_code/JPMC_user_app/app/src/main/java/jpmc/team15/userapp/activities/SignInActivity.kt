@@ -57,7 +57,7 @@ class SignInActivity : BaseActivity() {
                         val user = auth.currentUser
 
                         showProgressDialog(resources.getString(R.string.please_wait))
-                        FirestoreClass().signInUser(this)
+                        FirestoreClass().loadUserData(this)
 
                     } else {
                         // If sign in fails, display a message to the user.

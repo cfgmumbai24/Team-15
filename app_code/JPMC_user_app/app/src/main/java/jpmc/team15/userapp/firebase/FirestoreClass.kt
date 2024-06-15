@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import jpmc.team15.userapp.activities.MainActivity
+import jpmc.team15.userapp.activities.MyProfileActivity
 import jpmc.team15.userapp.activities.SignInActivity
 import jpmc.team15.userapp.activities.SignUpActivity
 import jpmc.team15.userapp.models.User
@@ -31,13 +32,12 @@ class FirestoreClass {
 
 
 
-    fun signInUser(activity: Activity){//kyuki calling activity ke instance pr  hi wapas jana hain
+    fun loadUserData(activity: Activity){//kyuki calling activity ke instance pr  hi wapas jana hain
         mFireStore.collection(Constants.USERS)//is collection -> table
             .document(getCurrentUserID())//ka ye row -> cause the rows are identified by the user id
             .get()
             .addOnSuccessListener { document->
                 val loggedInUser=document.toObject(User::class.java)!! // we are creating a user object from the document we get
-
                 when(activity){
                     is SignInActivity ->{
                         activity.signInSuccess(loggedInUser)
@@ -45,9 +45,10 @@ class FirestoreClass {
                     is MainActivity ->{
                         activity.updateNavigationUserDetails(loggedInUser,false)
                     }
+                    is MyProfileActivity ->{
+                        activity.setUserDataInUI(loggedInUser)
+                    }
                 }
-
-
             }
             .addOnFailureListener {
                     e->
@@ -59,7 +60,6 @@ class FirestoreClass {
                         activity.hideProgressDialog()
                     }
                 }
-
                 Log.e("FireStoreError", "Error while signing in")
             }
     }
