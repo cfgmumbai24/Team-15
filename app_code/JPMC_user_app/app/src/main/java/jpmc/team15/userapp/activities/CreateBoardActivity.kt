@@ -42,6 +42,7 @@ import okhttp3.Response
 import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 
 class CreateBoardActivity : BaseActivity() {
     private var createBoardBinding: ActivityCreateBoardBinding? = null
@@ -166,7 +167,7 @@ class CreateBoardActivity : BaseActivity() {
 
     //picture upload in storage
     private fun uploadBoardImage() {
-        showProgressDialog(resources.getString(R.string.please_wait))
+        showProgressDialog(("ML model running"))
 
         if (mSelectedImageFileUri != null) {
             val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
@@ -178,7 +179,11 @@ class CreateBoardActivity : BaseActivity() {
                 taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener { uri ->
                     mBoardImageURL = uri.toString()
                     callAPI(mBoardImageURL)
-                    createBoard()
+                    // Delay the execution of createBoard() by 5 seconds
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        createBoard()
+                    }, 30000)
+
                 }.addOnFailureListener {
                     hideProgressDialog()
                     showErrorSnackBar("Error in uploading image")
@@ -188,7 +193,12 @@ class CreateBoardActivity : BaseActivity() {
     }
 
     private fun callAPI(imageUrl: String) {
-        val client = OkHttpClient()
+        val client = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS) // connect timeout
+            .readTimeout(30, TimeUnit.SECONDS)    // socket read timeout
+            .writeTimeout(30, TimeUnit.SECONDS)   // socket write timeout
+            .build()
+
         val request = Request.Builder()
             .url("https://detect.roboflow.com/jpmmss/1?api_key=IZtyygJiC3DOgQoj4iCN&image=$imageUrl")
             .build()
@@ -219,11 +229,6 @@ class CreateBoardActivity : BaseActivity() {
                 }
 
                 Log.e("API:", inferred_class)
-
-                // Delay the execution of createBoard() by 5 seconds
-                Handler(Looper.getMainLooper()).postDelayed({
-                    createBoard()
-                }, 6000)
             }
         })
     }
