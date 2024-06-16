@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "920480938679",
+    "project_id": "jpmc-userapp",
+    "storage_bucket": "jpmc-userapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:920480938679:android:ce3a28276f5afe6851ab32",
+        "android_client_info": {
+          "package_name": "jpmc.team15.userapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
