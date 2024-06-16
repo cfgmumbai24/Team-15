@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,6 +12,8 @@ import AlertDialog from '../components/AlertDialog';
 import { Alert, Box, Button, Input, TextField } from '@mui/material';
 import { toast } from 'react-hot-toast';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import { productEndpoints, userEndpoints } from '../services/apis';
+import axios from 'axios';
 
 const categoryMappings = [{
   cat_id: 1,
@@ -52,6 +54,20 @@ export default function Photos() {
         cat_id: 1
       }
     ]);
+
+    const fetchPhotos = async () => {
+      const res = await axios.get(productEndpoints.PRODUCT_API, {
+      }, {
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+        }
+      })
+      console.log(res.data)
+    }
+
+    useEffect(() => {
+     fetchPhotos()
+    }, [])
 
     const generateSKU = async (index) => {
       const sku = (categoryMappings.find(cat => cat.cat_id === photos[index].cat_id).name.slice(0, 4) + photos[index].type +  photos[index].color.slice(0, 5)).toUpperCase()

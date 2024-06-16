@@ -9,7 +9,8 @@ import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete'
 import AlertDialog from '../components/AlertDialog';
-import { Alert, Box, TextField } from '@mui/material';
+import { Alert, Box, Button, TextField } from '@mui/material';
+import toast from 'react-hot-toast';
 
 const rows = [
   {
@@ -29,6 +30,7 @@ export default function Users() {
   });
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
+  const [addUserOpen, setAddUserOpen] = React.useState(false);
 
   const handleDeleteUser = async () => {
     // Add delete user logic here
@@ -48,8 +50,17 @@ export default function Users() {
     }, 3000);
   }
 
+  const addUser = async () => {
+    // Add add user logic here
+    toast.success("Sub-Admin Added Successfully")
+    setAddUserOpen(true)
+  }
+
   return (
     <>
+     <Button variant="contained" onClick={addUser}>Add Sub-Admin</Button>
+        <br/>
+        <br/>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -80,6 +91,34 @@ export default function Users() {
       </Table>
     </TableContainer>
     <AlertDialog open={editOpen} setOpen={setEditOpen} title="Edit Sub-Admin" content="Edit sub-admin" handleSave={handleEditUser}>
+    <Box
+      component="form"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+        <TextField id="outlined-basic" label="Name" variant="outlined" size='small' value={userData.name} onChange={(e) => setUserData({
+          ...userData,
+          name: e.target.value
+        })}/>
+        <TextField id="outlined-basic" label="Email" variant="outlined" size='small' value={userData.email} onChange={(e) => setUserData({
+          ...userData,
+          email: e.target.value
+        
+        })}/>
+        <TextField id="outlined-basic" label="Phone No" variant="outlined" size='small' value={userData.phone}
+        onChange={(e) => setUserData({
+          ...userData,
+          phone: e.target.value
+        })}
+        />
+      </Box>
+    </AlertDialog>
+    <AlertDialog open={addUserOpen} setOpen={setAddUserOpen} title="Add Sub-Admin" content="Add Sub-Admin" handleSave={addUser}>
     <Box
       component="form"
       sx={{

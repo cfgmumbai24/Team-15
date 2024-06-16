@@ -9,7 +9,8 @@ import Paper from '@mui/material/Paper';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete'
 import AlertDialog from '../components/AlertDialog';
-import { Alert, Box, TextField } from '@mui/material';
+import { Alert, Box, Button, TextField } from '@mui/material';
+import toast from 'react-hot-toast';
 
 const rows = [
   {
@@ -25,9 +26,10 @@ export default function Sellers() {
   const [isDelete, setIsDelete] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
   const [sellerData, setSellerData] = React.useState({
-    name: "",
-    phone: "",
+    name: "Ramu",
+    phone: "9999999999",
   });
+  const [addSellerOpen, setAddSellerOpen] = React.useState(false);
 
   const handleDeleteSeller = async () => {
     // Add delete user logic here
@@ -44,11 +46,22 @@ export default function Sellers() {
     setIsEdit(true)
     setTimeout(() => {
       setIsEdit(false);
+      toast.success("Seller Edited Successfully")
     }, 3000);
   }
 
+  const addSeller = async () => {
+    // Add add user logic here
+    toast.success("Seller Added Successfully")
+    setAddSellerOpen(true)
+  }
+
+
   return (
     <>
+    <Button variant="contained" onClick={() => setAddSellerOpen(true)}>Add Sellers</Button>
+        <br/>
+        <br/>
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -116,6 +129,53 @@ export default function Sellers() {
         value={sellerData.role} onChange={(e) => setSellerData({
           ...sellerData,
           role: e.target.value
+        })}
+        />
+      </Box>
+    </AlertDialog>
+    <AlertDialog open={editOpen} setOpen={setEditOpen} title="Add Seller" content="Edit Seller" handleSave={addSeller}>
+    <Box
+      component="form"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+        <TextField id="outlined-basic" label="Name" variant="outlined" size='small' value={sellerData.name} onChange={(e) => setSellerData({
+          ...sellerData,
+          name: e.target.value
+        })}/>
+      
+        <TextField id="outlined-basic" label="Phone No" variant="outlined" size='small' value={sellerData.phone}
+        onChange={(e) => setSellerData({
+          ...sellerData,
+          phone: e.target.value
+        })}
+        />
+      </Box>
+    </AlertDialog>
+    <AlertDialog open={addSellerOpen} setOpen={setAddSellerOpen} title="Add Seller" content="Add Seller" handleSave={addSeller}>
+    <Box
+      component="form"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        '& > :not(style)': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+        <TextField id="outlined-basic" label="Name" variant="outlined" size='small' value={sellerData.name} onChange={(e) => setSellerData({
+          ...sellerData,
+          name: e.target.value
+        })}/>
+        <TextField id="outlined-basic" label="Phone No" variant="outlined" size='small' value={sellerData.phone}
+        onChange={(e) => setSellerData({
+          ...sellerData,
+          phone: e.target.value
         })}
         />
       </Box>

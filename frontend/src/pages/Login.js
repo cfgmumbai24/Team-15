@@ -21,10 +21,10 @@ export const Login = () => {
     if (!userData.phone.trim() || !userData.password.trim()) {
       toast.warning("Enter all credentials!")
     } else {
-      const res = await axios.post(userEndpoints.LOGIN_API, {
-        phone: userData.email,
-        pwd: userData.password,
-      })
+      // const res = await axios.post(userEndpoints.LOGIN_API, {
+      //   phone: userData.email,
+      //   pwd: userData.password,
+      // })
 
       if (userData.password === "12345") 
       {

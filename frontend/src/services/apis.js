@@ -5,6 +5,7 @@ export const userEndpoints = {
 }
 
 export const productEndpoints = {
+    PRODUCT_API : `${BASE_URL}/api/fetch-data`
 }
 
 export const requestEndpoints = {
