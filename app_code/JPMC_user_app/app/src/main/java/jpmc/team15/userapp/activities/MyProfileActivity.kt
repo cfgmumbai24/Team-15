@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.view.WindowManager
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -38,6 +39,11 @@ class MyProfileActivity : BaseActivity() {
         setContentView(profileBinding?.root)
 
         setupToolbar()
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         //to populate data
         showProgressDialog(resources.getString(R.string.please_wait))

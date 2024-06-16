@@ -55,7 +55,7 @@ class MainActivity : BaseActivity() {
                 R.id.nav_signOut -> {
                     FirebaseAuth.getInstance().signOut()
                     showErrorSnackBar("Successfully Signed out")
-                    val intent= Intent(this@MainActivity,IntroActivity::class.java)
+                    val intent= Intent(this@MainActivity,SignInActivity::class.java)
 
                     //if we had previous intro activity in stack use that one
                     intent.flags= Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK

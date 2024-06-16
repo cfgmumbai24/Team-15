@@ -13,6 +13,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
@@ -119,6 +120,10 @@ class CreateBoardActivity : BaseActivity() {
             }
         }
 
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
     }
 
     //board creation
@@ -158,8 +163,8 @@ class CreateBoardActivity : BaseActivity() {
 
 
 
-        //startActivity(intent)
-        //finish()
+        startActivity(intent)
+        finish()
     }
 
 
