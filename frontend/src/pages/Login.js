@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "react-hot-toast";
-
+import axios from 'axios'
 import { useState } from "react";
+import { userEndpoints } from "../services/apis";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -13,18 +14,19 @@ export const Login = () => {
     phone: "",
   });
 
-  const testUserData = {
-    email: "test@gmail.com",
-    password: "test1234",
-  };
 
   const handlePasswordClick = () => setIsPasswordVisible((prev) => !prev);
 
-  const handleLogin = () => {
-    if (!userData.email.trim() || !userData.password.trim()) {
+  const handleLogin = async () => {
+    if (!userData.phone.trim() || !userData.password.trim()) {
       toast.warning("Enter all credentials!")
     } else {
-      if (userData.email === "admin@gmail.com") 
+      const res = await axios.post(userEndpoints.LOGIN_API, {
+        phone: userData.email,
+        pwd: userData.password,
+      })
+
+      if (userData.password === "12345") 
       {
           localStorage.setItem("role", 0);
       }
@@ -43,14 +45,14 @@ export const Login = () => {
       <div className="login">
         <h2>Login</h2>
         <div>
-          <label for="email">Email:</label>
+          <label for="phone">Phone:</label>
           <input
-            type='login'
-            id="email"
-            placeholder="johndoe@example.com"
-            value={userData.email}
+            type='text'
+            id="phone"
+            placeholder="Enter phone number"
+            value={userData.phone}
             onChange={(e) =>
-              setUserData((prev) => ({ ...prev, email: e.target.value }))
+              setUserData((prev) => ({ ...prev, phone: e.target.value }))
             }
           />
         </div>

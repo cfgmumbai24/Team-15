@@ -5,7 +5,6 @@ export const userEndpoints = {
 }
 
 export const productEndpoints = {
-
 }
 
 export const requestEndpoints = {

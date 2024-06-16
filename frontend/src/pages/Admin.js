@@ -18,7 +18,7 @@ import LocalMallIcon from '@mui/icons-material/LocalMall';
 import HelpIcon from '@mui/icons-material/Help';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CategoryIcon from '@mui/icons-material/Category';
-import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Users from './Users';
 import Requests from './Requests';
 import Buyers from './Buyers';
