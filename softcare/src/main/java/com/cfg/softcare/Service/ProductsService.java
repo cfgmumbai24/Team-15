@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -145,5 +146,16 @@ public class ProductsService {
     public List<Map<String, Object>> getRequest() {
         return productRepository.getRequest();
     }
+
+//    private final RestTemplate restTemplate;
+//
+//    public FetchJsonDataService(RestTemplate restTemplate) {
+//        this.restTemplate = restTemplate;
+//    }
+//
+//    public String fetchData() {
+//        String url = "https://firestore.googleapis.com/v1/projects/jpmc-userapp/databases/(default)/documents/Boards?key="; // replace with your URL
+//        return restTemplate.getForObject(url, String.class);
+//    }
 
 }

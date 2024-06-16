@@ -11,7 +11,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins={"http://localhost:4200","http://localhost:63145"},allowCredentials = "true")
+@CrossOrigin(origins={"http://localhost:4200","http://localhost:63145","http://localhost:3000"},allowCredentials =
+        "true")
 public class ProductsWeb {
 
     @Autowired
@@ -52,10 +53,10 @@ public class ProductsWeb {
         return productsService.sendQuery(body);
     }
 
-    @PostMapping("/sendRequest")
-    public ResponseEntity<Map<String,Object>> sendRequest(@RequestBody Map<String,Object> body){
-        return productsService.sendRequest(body);
-    }
+//    @PostMapping("/sendRequest")
+//    public ResponseEntity<Map<String,Object>> sendRequest(@RequestBody Map<String,Object> body){
+//        return productsService.sendRequest(body);
+//    }
 
     @GetMapping("/showProducts")
     public List<Map<String,Object>> showProducts(){
@@ -64,6 +65,8 @@ public class ProductsWeb {
 
     @GetMapping("/getRequest")
     public List<Map<String,Object>> getRequest(){
+
+
         return productsService.getRequest();
     }
 
