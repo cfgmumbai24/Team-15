@@ -1,10 +1,10 @@
-import { useFilters } from "../../context/filterContext";
+// import { useFilters } from "../../context/filterContext";
 import { useProducts } from "../../context/productContext";
 import "./sidebar.css";
 
 export const SideBar = ({ isFilterVisible }) => {
   const { productState } = useProducts();
-  const { filterDispatch, filterState } = useFilters();
+  // const { filterDispatch, filterState } = useFilters();
   return (
     <>
       <div
@@ -15,7 +15,7 @@ export const SideBar = ({ isFilterVisible }) => {
           <h2>Filters</h2>
           <button
             onClick={() => {
-              filterDispatch({ type: "clear_filters" });
+              // filterDispatch({ type: "clear_filters" });
             }}
           >
             Clear Filters
@@ -29,13 +29,13 @@ export const SideBar = ({ isFilterVisible }) => {
               <label>
                 <input
                   type="checkbox"
-                  checked={filterState?.category.includes(categoryName)}
-                  onChange={() =>
-                    filterDispatch({
-                      type: "filter_by_category",
-                      payload: categoryName,
-                    })
-                  }
+                  // checked={filterState?.category.includes(categoryName)}
+                  // onChange={() =>
+                  //   filterDispatch({
+                  //     type: "filter_by_category",
+                  //     payload: categoryName,
+                  //   })
+                  // }
                 />{" "}
                 {categoryName}
               </label>
@@ -43,19 +43,19 @@ export const SideBar = ({ isFilterVisible }) => {
           ))}
         </div>
 
-        <h4>Brands</h4>
+        {/* <h4>Brands</h4>
         <div className="brand-filter">
           <label>
             <input
               type="checkbox"
-              checked={filterState?.brands.includes("H&M")}
-              onChange={() =>
-                filterDispatch({ type: "filter_by_brands", payload: "H&M" })
-              }
+              // checked={filterState?.brands.includes("H&M")}
+              // onChange={() =>
+              //   filterDispatch({ type: "filter_by_brands", payload: "H&M" })
+              // }
             />{" "}
             H&M
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Sassafras")}
@@ -67,8 +67,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Sassafras
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Levis")}
@@ -77,8 +77,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Levis
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Urbanic")}
@@ -87,8 +87,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Urbanic
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Zara")}
@@ -97,8 +97,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Zara
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Roadster")}
@@ -110,8 +110,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Roadster
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Dolce & Gabbana")}
@@ -123,8 +123,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Dolce & Gabbana
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Tokyo Talkies")}
@@ -136,8 +136,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Tokyo Talkies
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="checkbox"
               checked={filterState?.brands.includes("Indya")}
@@ -146,10 +146,10 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Indya
-          </label>
+          </label> */}
         </div>
 
-        <h4>Ratings</h4>
+        {/* <h4>Ratings</h4>
         <div className="price-filter">
           <input
             type="range"
@@ -164,19 +164,19 @@ export const SideBar = ({ isFilterVisible }) => {
                 payload: e.target.value,
               })
             }
-          />
-          <datalist id="numbers">
+          /> */}
+          {/* <datalist id="numbers">
             <option value="1"></option>
             <option value="2"></option>
             <option value="3"></option>
             <option value="4"></option>
             <option value="5"></option>
           </datalist>
-        </div>
+        </div> */}
 
-        <h4>Sort By Price:</h4>
-        <div className="price-filter">
-          <label>
+        {/* <h4>Sort By Price:</h4>
+        <div className="price-filter"> */}
+          {/* <label>
             <input
               type="radio"
               name="sort"
@@ -186,8 +186,8 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Featured
-          </label>
-          <label>
+          </label> */}
+          {/* <label>
             <input
               type="radio"
               name="sort"
@@ -201,8 +201,8 @@ export const SideBar = ({ isFilterVisible }) => {
             />{" "}
             High to Low
           </label>
-          <label>
-            <input
+          <label> */}
+            {/* <input
               type="radio"
               name="sort"
               checked={filterState.sort === "low-to-high"}
@@ -214,10 +214,10 @@ export const SideBar = ({ isFilterVisible }) => {
               }
             />{" "}
             Low to High
-          </label>
-        </div>
+          </label> */}
+        {/* </div> */}
 
-        <h4>Availability</h4>
+        {/* <h4>Availability</h4>
         <div className="stock-filter">
           <label>
             <input
@@ -232,8 +232,8 @@ export const SideBar = ({ isFilterVisible }) => {
             />{" "}
             Include Out of Stock
           </label>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </>
   );
 };

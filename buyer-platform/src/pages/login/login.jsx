@@ -1,6 +1,6 @@
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import "./login.css";
-import { useState } from "react";
 import { useAuth } from "../../context/authContext";
 import { toast } from "react-toastify";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -8,41 +8,56 @@ import ClipLoader from "react-spinners/ClipLoader";
 export const Login = () => {
   const navigate = useNavigate();
   const { userLogin, authState } = useAuth();
-  const location = useLocation()
+  const location = useLocation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
+
   const testUserData = {
-    email: "",
-    password: "",
+    email: "testuser@example.com", // Replace with valid test user email
+    password: "password123", // Replace with valid test user password
   };
 
   const handlePasswordClick = () => setIsPasswordVisible((prev) => !prev);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!userData.email.trim() || !userData.password.trim()) {
-      toast.warning("Enter all credentials!")
+      toast.warning("Enter all credentials!");
     } else {
-      userLogin(userData);
+      try {
+        await userLogin(userData);
+        navigate(location?.state?.from?.pathname || "/products");
+      } catch (error) {
+        toast.error("Login failed: " + error.message);
+      }
     }
   };
 
-  const handleTestLogin = () => {
-    setUserData(testUserData);
-    userLogin(testUserData);
-    navigate(location?.state?.from?.pathname || "/products");
+  const handleTestLogin = async () => {
+    try {
+      setUserData(testUserData);
+      await userLogin(testUserData);
+      navigate(location?.state?.from?.pathname || "/products");
+    } catch (error) {
+      toast.error("Test login failed: " + error.message);
+    }
   };
+
+  // Automatically login as guest on mount
+  useEffect(() => {
+    handleTestLogin();
+  }, []);
 
   return (
     <div>
       <div className="login">
         <h2>Login</h2>
         <div>
-          <label for="email">Email:</label>
+          <label htmlFor="email">Email:</label>
           <input
-            type='login'
+            type="email"
             id="email"
             placeholder="johndoe@example.com"
             value={userData.email}
@@ -53,7 +68,7 @@ export const Login = () => {
         </div>
 
         <div>
-          <label for="password">Password:</label>
+          <label htmlFor="password">Password:</label>
           <div className="password-wrapper">
             <input
               id="password"
@@ -66,9 +81,9 @@ export const Login = () => {
             />
             <button onClick={handlePasswordClick}>
               {isPasswordVisible ? (
-                <i class="fa-regular fa-eye-slash"></i>
+                <i className="fa-regular fa-eye-slash"></i>
               ) : (
-                <i class="fa-regular fa-eye"></i>
+                <i className="fa-regular fa-eye"></i>
               )}
             </button>
           </div>
@@ -79,8 +94,12 @@ export const Login = () => {
           Login
         </button>
 
+        <button className="login-button" onClick={handleTestLogin}>
+          Login as Guest
+        </button>
+
         <p onClick={() => navigate("/signup")}>
-          Create New account <i class="fa-solid fa-angle-right"></i>
+          Create New account <i className="fa-solid fa-angle-right"></i>
         </p>
       </div>
     </div>
